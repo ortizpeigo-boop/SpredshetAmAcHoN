@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sushi Mania – Tomares</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --azul: #0B2545;
+    --azul-medio: #1A4A7A;
+    --azul-claro: #2D6EAD;
+    --naranja: #F4720A;
+    --naranja-claro: #FF9A3C;
+    --blanco: #FAF8F5;
+    --gris: #8A8A8A;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--azul); color: var(--blanco); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 5%;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(11,37,69,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(244,114,10,0.2);
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 4px; line-height: 1; }
+  .logo span:first-child { color: var(--naranja); }
+  .logo span:last-child { color: var(--blanco); }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav ul a { text-decoration: none; color: rgba(250,248,245,0.75); font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; transition: color 0.25s; }
+  nav ul a:hover { color: var(--naranja); }
+
+  /* HERO */
+  .hero { min-height: 100vh; position: relative; display: flex; align-items: center; overflow: hidden; }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=1800&q=80') center/cover no-repeat;
+    animation: slowZoom 20s ease-in-out infinite alternate;
+  }
+  @keyframes slowZoom { from { transform: scale(1.0); } to { transform: scale(1.08); } }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(11,37,69,0.93) 0%, rgba(11,37,69,0.65) 50%, rgba(26,74,122,0.38) 100%);
+  }
+  .hero-content { position: relative; z-index: 2; padding: 0 5%; max-width: 760px; animation: fadeUp 1.2s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--naranja); font-weight: 500; margin-bottom: 20px; }
+  .hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--naranja); }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 5.2rem); line-height: 1.1; font-weight: 700; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: var(--naranja-claro); }
+  .hero p { font-size: 1.1rem; color: rgba(250,248,245,0.78); line-height: 1.7; max-width: 480px; font-weight: 300; margin-bottom: 40px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid rgba(244,114,10,0.5); border-radius: 40px; font-size: 0.85rem; color: var(--naranja-claro); font-weight: 500; }
+  .stars { color: #FFD700; letter-spacing: 2px; font-size: 1rem; }
+  .hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(250,248,245,0.5); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; animation: bounce 2s ease-in-out infinite; }
+  .hero-scroll::after { content: ''; width: 1px; height: 50px; background: linear-gradient(to bottom, rgba(244,114,10,0.7), transparent); }
+  @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+  /* SECTIONS */
+  section { padding: 100px 5%; }
+  .section-label { display: inline-flex; align-items: center; gap: 12px; font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--naranja); font-weight: 500; margin-bottom: 16px; }
+  .section-label::after { content: ''; width: 50px; height: 1px; background: var(--naranja); opacity: 0.5; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.15; margin-bottom: 60px; }
+  .section-title em { font-style: italic; color: var(--naranja-claro); }
+
+  /* FEATURED */
+  .featured { background: var(--azul); }
+  .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .feat-card { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 3/4; transition: transform 0.4s ease; }
+  .feat-card:hover { transform: translateY(-8px); }
+  .feat-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .feat-card:hover img { transform: scale(1.06); }
+  .feat-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,37,69,0.97) 0%, rgba(11,37,69,0.3) 55%, transparent 100%); }
+  .feat-badge { position: absolute; top: 16px; right: 16px; background: var(--naranja); color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 1px; padding: 6px 14px; border-radius: 8px; }
+  .feat-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; }
+  .feat-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+  .feat-desc { font-size: 0.8rem; color: rgba(250,248,245,0.65); line-height: 1.5; margin-bottom: 14px; font-weight: 300; }
+  .feat-price { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--naranja); letter-spacing: 2px; }
+
+  /* DIVIDER */
+  .divider { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--azul-claro), var(--naranja), var(--azul-claro), transparent); opacity: 0.3; }
+
+  /* GALLERY STRIP */
+  .gallery-strip { display: flex; height: 280px; overflow: hidden; gap: 3px; }
+  .gallery-strip img { flex: 1; object-fit: cover; filter: saturate(0.8) brightness(0.85); transition: flex 0.6s ease, filter 0.4s; }
+  .gallery-strip img:hover { flex: 3; filter: saturate(1.1) brightness(1); }
+
+  /* CARTA */
+  .carta { background: var(--blanco); color: var(--azul); }
+  .carta .section-title { color: var(--azul); }
+  .carta .section-label { color: var(--naranja); }
+  .carta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  .menu-cat { background: white; border-radius: 20px; padding: 32px; box-shadow: 0 4px 30px rgba(11,37,69,0.08); border: 1px solid rgba(11,37,69,0.07); transition: box-shadow 0.3s; }
+  .menu-cat:hover { box-shadow: 0 8px 40px rgba(11,37,69,0.14); }
+  .cat-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid var(--naranja); }
+  .cat-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 3px; color: var(--azul); }
+  .cat-sub { font-size: 0.72rem; color: var(--gris); letter-spacing: 1px; text-transform: uppercase; }
+  .menu-item { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 0; border-bottom: 1px dashed rgba(11,37,69,0.1); gap: 12px; }
+  .menu-item:last-child { border-bottom: none; }
+  .item-info { flex: 1; }
+  .item-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem; color: var(--azul); margin-bottom: 2px; }
+  .item-desc { font-size: 0.74rem; color: var(--gris); font-weight: 300; }
+  .item-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--naranja); letter-spacing: 1px; white-space: nowrap; }
+
+  /* FOOTER */
+  .footer-section { background: var(--azul); padding: 80px 5%; }
+  .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 60px; align-items: start; }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 6px; line-height: 1; margin-bottom: 16px; }
+  .footer-logo span:first-child { color: var(--naranja); display: block; }
+  .footer-logo span:last-child { color: var(--blanco); display: block; }
+  .footer-tagline { font-family: 'Playfair Display', serif; font-style: italic; color: rgba(250,248,245,0.55); font-size: 0.95rem; line-height: 1.6; }
+  .footer-col-title { font-family: 'Bebas Neue', sans-serif; letter-spacing: 3px; font-size: 1.1rem; color: var(--naranja); margin-bottom: 20px; }
+  .footer-info-item { display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start; }
+  .info-icon { width: 36px; height: 36px; background: rgba(244,114,10,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .info-text { font-size: 0.9rem; color: rgba(250,248,245,0.75); line-height: 1.6; }
+  .info-text strong { color: var(--blanco); display: block; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+  .rating-box { background: rgba(244,114,10,0.1); border: 1px solid rgba(244,114,10,0.25); border-radius: 16px; padding: 24px; text-align: center; }
+  .rating-num { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: var(--naranja); line-height: 1; margin-bottom: 8px; }
+  .rating-stars { color: #FFD700; font-size: 1.3rem; letter-spacing: 3px; margin-bottom: 8px; }
+  .rating-label { font-size: 0.78rem; color: rgba(250,248,245,0.55); letter-spacing: 2px; text-transform: uppercase; }
+  .map-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; padding: 12px 24px; background: var(--naranja); color: white; border-radius: 10px; text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 1px; transition: background 0.25s, transform 0.2s; }
+  .map-btn:hover { background: var(--naranja-claro); transform: translateY(-2px); }
+  .footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(250,248,245,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: rgba(250,248,245,0.35); }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .featured-grid { grid-template-columns: 1fr; }
+    .feat-card { aspect-ratio: 4/3; }
+    .carta-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    nav ul { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span>SUSHI</span><span>MANIA</span></div>
+  <ul>
+    <li><a href="#destacados">Destacados</a></li>
+    <li><a href="#carta">Carta</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Tomares, Sevilla</div>
+    <h1>El sabor <em>5 estrellas</em> de Japón en Tomares</h1>
+    <p>Rolls artesanales, niguiris premium y combinados únicos elaborados con los ingredientes más frescos cada día.</p>
+    <div class="hero-badge">
+      <span class="stars">★★★★★</span>
+      5.0 · Valoración perfecta en Google
+    </div>
+  </div>
+  <div class="hero-scroll">Descubre</div>
+</section>
+
+<div class="gallery-strip">
+  <img src="https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80" alt="Sushi rolls">
+  <img src="https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80" alt="Nigiri">
+  <img src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80" alt="Sushi platter">
+  <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=600&q=80" alt="Dragon roll">
+  <img src="https://images.unsplash.com/photo-1582450871972-ab5ca641643d?w=600&q=80" alt="Sushi set">
+</div>
+
+<section class="featured" id="destacados">
+  <div class="reveal">
+    <div class="section-label">Más Pedidos</div>
+    <div class="section-title">Nuestros <em>Favoritos</em></div>
+  </div>
+  <div class="featured-grid">
+    <div class="feat-card reveal">
+      <img src="https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=800&q=80" alt="Oishi Maguro">
+      <div class="feat-card-overlay"></div>
+      <div class="feat-badge">⭐ Favorito</div>
+      <div class="feat-info">
+        <div class="feat-name">Oishi Maguro</div>
+        <div class="feat-desc">Atún, aguacate, queso crema y cebolla frita · 8 uds</div>
+        <div class="feat-price">11,00 €</div>
+      </div>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:0.15s">
+      <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80" alt="Dragon Roll">
+      <div class="feat-card-overlay"></div>
+      <div class="feat-badge">🔥 Top</div>
+      <div class="feat-info">
+        <div class="feat-name">Dragon Roll</div>
+        <div class="feat-desc">Langostino panko, aguacate, salsa unagui y salmón flambeado · 8 uds</div>
+        <div class="feat-price">13,65 €</div>
+      </div>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:0.3s">
+      <img src="https://images.unsplash.com/photo-1582450871972-ab5ca641643d?w=800&q=80" alt="Set 4 Premium">
+      <div class="feat-card-overlay"></div>
+      <div class="feat-badge">👑 Premium</div>
+      <div class="feat-info">
+        <div class="feat-name">Set 4 Premium</div>
+        <div class="feat-desc">16 piezas selección del chef · Experiencia completa</div>
+        <div class="feat-price">18,00 €</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="carta" id="carta">
+  <div class="reveal">
+    <div class="section-label">Nuestra Selección</div>
+    <div class="section-title">Carta <em>Completa</em></div>
+  </div>
+  <div class="carta-grid">
+
+    <div class="menu-cat reveal">
+      <div class="cat-header">
+        <div class="cat-title">Uramakis</div>
+        <div class="cat-sub">8 unidades</div>
+      </div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">California Roll</div><div class="item-desc">Clásico irresistible</div></div><div class="item-price">11,50 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Philadelphia Roll</div><div class="item-desc">Suave y cremoso</div></div><div class="item-price">10,60 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Oishi Maguro</div><div class="item-desc">Atún · aguacate · queso crema · cebolla frita</div></div><div class="item-price">11,00 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Dragon Roll</div><div class="item-desc">Langostino panko · aguacate · salsa unagui · salmón flambeado</div></div><div class="item-price">13,65 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Mango Roll</div><div class="item-desc">Dulce y tropical</div></div><div class="item-price">12,60 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Atún Anguila</div><div class="item-desc">Combinación especial</div></div><div class="item-price">9,90 €</div></div>
+    </div>
+
+    <div class="menu-cat reveal" style="transition-delay:0.1s">
+      <div class="cat-header">
+        <div class="cat-title">Combos</div>
+        <div class="cat-sub">Para compartir</div>
+      </div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Set 1</div><div class="item-desc">16 unidades selección</div></div><div class="item-price">16,00 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Set 4 Premium</div><div class="item-desc">16 piezas · selección del chef</div></div><div class="item-price">18,00 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Party Mix</div><div class="item-desc">32 unidades · la fiesta perfecta</div></div><div class="item-price">26,00 €</div></div>
+    </div>
+
+    <div class="menu-cat reveal" style="transition-delay:0.2s">
+      <div class="cat-header">
+        <div class="cat-title">Niguiris</div>
+        <div class="cat-sub">6 unidades</div>
+      </div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Salmón Flambeado</div><div class="item-desc">Delicado y aromático</div></div><div class="item-price">9,50 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Atún</div><div class="item-desc">Intenso y fresco</div></div><div class="item-price">11,30 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Pez Mantequilla</div><div class="item-desc">Suave y untuoso</div></div><div class="item-price">10,40 €</div></div>
+    </div>
+
+    <div class="menu-cat reveal" style="transition-delay:0.3s">
+      <div class="cat-header">
+        <div class="cat-title">Entrantes & Otros</div>
+        <div class="cat-sub">Para empezar</div>
+      </div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Edamame</div><div class="item-desc">Habas de soja al vapor con sal</div></div><div class="item-price">6,50 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Gyozas de Pollo</div><div class="item-desc">10 unidades · crujientes y jugosas</div></div><div class="item-price">9,50 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Gyozas de Ternera</div><div class="item-desc">10 unidades · sabor intenso</div></div><div class="item-price">9,50 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Miso Soup</div><div class="item-desc">Sopa tradicional japonesa</div></div><div class="item-price">6,50 €</div></div>
+      <div class="menu-item"><div class="item-info"><div class="item-name">Poke Bowl Salmón</div><div class="item-desc">Bowl completo con salmón fresco</div></div><div class="item-price">16,00 €</div></div>
+    </div>
+
+  </div>
+</section>
+
+<section class="footer-section" id="contacto">
+  <div class="footer-grid">
+    <div class="reveal">
+      <div class="footer-logo"><span>SUSHI</span><span>MANIA</span></div>
+      <div class="footer-tagline">El auténtico sabor japonés<br>en el corazón de Tomares.</div>
+    </div>
+    <div class="reveal" style="transition-delay:0.15s">
+      <div class="footer-col-title">Encuéntranos</div>
+      <div class="footer-info-item">
+        <div class="info-icon">📍</div>
+        <div class="info-text"><strong>Dirección</strong>C. del Aire, puerta 4, local 12<br>Tomares, Sevilla</div>
+      </div>
+      <div class="footer-info-item">
+        <div class="info-icon">📞</div>
+        <div class="info-text"><strong>Teléfono</strong>854 58 72 94</div>
+      </div>
+      <a href="https://www.google.com/maps/search/Sushi+Mania+Tomares" target="_blank" class="map-btn">🗺️ Ver en Google Maps</a>
+    </div>
+    <div class="reveal" style="transition-delay:0.3s">
+      <div class="footer-col-title">Valoración</div>
+      <div class="rating-box">
+        <div class="rating-num">5.0</div>
+        <div class="rating-stars">★★★★★</div>
+        <div class="rating-label">Google Reviews</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Sushi Mania Tomares · Todos los derechos reservados</span>
+    <span>Sabor japonés en Tomares 🍱</span>
+  </div>
+</section>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
